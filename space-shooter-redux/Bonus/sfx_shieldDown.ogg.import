@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/sfx_shieldDown.ogg-2f03f04a667309e9e22348eda0a73967.oggstr"
+
+[deps]
+
+source_file="res://space-shooter-redux/Bonus/sfx_shieldDown.ogg"
+dest_files=[ "res://.import/sfx_shieldDown.ogg-2f03f04a667309e9e22348eda0a73967.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0
