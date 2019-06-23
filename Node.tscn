@@ -1,24 +1,90 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://Node2D.gd" type="Script" id=1]
-[ext_resource path="res://KinematicBody2D.gd" type="Script" id=2]
+[ext_resource path="res://Mob.tscn" type="PackedScene" id=2]
 [ext_resource path="res://PlayerBullet.tscn" type="PackedScene" id=3]
 [ext_resource path="res://rocket.png" type="Texture" id=4]
+[ext_resource path="res://HUD.gd" type="Script" id=5]
+
+[sub_resource type="GDScript" id=2]
+script/source = "extends RigidBody2D
+
+signal game_over
+
+export var enabled = false
+
+var thrust = Vector2(0, 300)
+var torque = 5000
+
+export (PackedScene) var bullet
+onready var bullet_container = get_node(\"BulletContainer\")
+
+func reset():
+	$Camera2D.limit_left = 0
+	position.x = 0
+	position.y = 0
+	$BorderTimer.start()
+	enabled = true
+
+func _process(delta):
+	if enabled and Input.is_action_pressed(\"shoot\"):
+		shoot()
+
+func _integrate_forces(state):
+	if not enabled:
+		return
+	
+	if Input.is_action_pressed(\"up\"):
+		applied_force = thrust.rotated(rotation)
+	else:
+		applied_force = Vector2()
+	var rotation_dir = 0
+	if Input.is_action_pressed(\"right\"):
+		rotation_dir += 1
+	if Input.is_action_pressed(\"left\"):
+		rotation_dir -= 1
+	
+	applied_torque = rotation_dir * torque
+
+func shoot():
+	var b = bullet.instance()
+	bullet_container.add_child(b)
+	b.start_at(rotation, $Muzzle.global_position)
+	#apply_impulse(Vector2(5, 0), Vector2(-5, 0))
+
+func _on_Player_body_shape_entered(body_id, body, body_shape, local_shape):
+	if not enabled:
+		return
+	
+	enabled = false
+	emit_signal(\"game_over\")
+
+func _on_BorderTimer_timeout():
+	$Camera2D.limit_left += 1
+
+func _on_Node2D_game_start():
+	enabled = true
+"
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 35, -30, 5, 47, -29, -30 )
 
 [node name="Node2D" type="Node2D"]
 script = ExtResource( 1 )
+hill_range = 200
+Mob = ExtResource( 2 )
 
 [node name="Line2D" type="Line2D" parent="."]
 texture_mode = -1082211219
 
 [node name="Player" type="RigidBody2D" parent="."]
+editor/display_folded = true
 position = Vector2( 512.703, 167.629 )
 rotation = -1.5708
 gravity_scale = 0.1
-script = ExtResource( 2 )
+contacts_reported = 1
+contact_monitor = true
+script = SubResource( 2 )
 bullet = ExtResource( 3 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
@@ -36,11 +102,51 @@ texture = ExtResource( 4 )
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 current = true
+limit_left = 0
+limit_top = -100
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="BulletContainer" type="Node" parent="Player"]
 
+[node name="BorderTimer" type="Timer" parent="Player"]
+wait_time = 0.01
+
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
+[node name="MobTimer" type="Timer" parent="."]
+
+[node name="HUD" type="CanvasLayer" parent="."]
+editor/display_folded = true
+script = ExtResource( 5 )
+
+[node name="Score" type="Label" parent="HUD"]
+margin_bottom = 14.0
+
+[node name="Label" type="Label" parent="HUD"]
+margin_left = 450.639
+margin_top = 100.701
+margin_right = 587.639
+margin_bottom = 114.701
+text = "Press any key to start"
+
+[node name="BlinkTimer" type="Timer" parent="HUD/Label"]
+autostart = true
+
+[node name="Highscore" type="Label" parent="HUD"]
+anchor_right = 0.33
+margin_right = -337.92
+align = 2
+valign = 1
+
+[connection signal="game_over" from="." to="." method="_on_Node2D_game_over"]
+[connection signal="game_over" from="." to="HUD" method="_on_Node2D_game_over"]
+[connection signal="game_start" from="." to="Player" method="_on_Node2D_game_start"]
+[connection signal="game_start" from="." to="." method="_on_Node2D_game_start"]
+[connection signal="game_start" from="." to="HUD" method="_on_Node2D_game_start"]
+[connection signal="body_shape_entered" from="Player" to="Player" method="_on_Player_body_shape_entered"]
+[connection signal="game_over" from="Player" to="." method="_on_Player_game_over"]
+[connection signal="timeout" from="Player/BorderTimer" to="Player" method="_on_BorderTimer_timeout"]
+[connection signal="timeout" from="MobTimer" to="." method="_on_MobTimer_timeout"]
+[connection signal="timeout" from="HUD/Label/BlinkTimer" to="HUD" method="_on_Timer_timeout"]

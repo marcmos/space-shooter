@@ -26,4 +26,13 @@ func shoot():
 	var b = bullet.instance()
 	bullet_container.add_child(b)
 	b.start_at(rotation, $Muzzle.global_position)
-	
+	#apply_impulse(Vector2(5, 0), Vector2(-5, 0))
+
+func _on_Player_body_shape_entered(body_id, body, body_shape, local_shape):
+	#hide()
+	#$CollisionShape2D.set_deferred("disabled", true)
+	#get_tree().paused = true
+	pass
+
+func _on_BorderTimer_timeout():
+	$Camera2D.limit_left += 1

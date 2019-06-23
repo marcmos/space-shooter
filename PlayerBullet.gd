@@ -1,4 +1,4 @@
-extends Area2D
+extends KinematicBody2D
 
 var vel = Vector2()
 export var speed = 1000
