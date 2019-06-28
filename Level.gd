@@ -2,61 +2,65 @@ extends Node
 
 export (PackedScene) var Mob
 
-signal game_start
+signal game_started
 signal game_over(score)
 
+var game_started = false
+var game_over = false
+
+onready var camera_left = camera_left_margin()
+
 var mob_hits = 0
-var game_over = true
-var restart_cooldown
 
-func is_game_over():
-	return game_over
-
-func game_start():
-	if restart_cooldown:
+func game_over_condition():
+	if game_over:
 		return
 	
-	emit_signal("game_start")
-	mob_hits = 0
-	game_over = false
+	game_over = true
+	$Player/Camera2D.current = false
+	$MobTimer.stop()
+	print("emitting game over")
+	emit_signal("game_over", score())
 
 func score():
 	return $Player/Camera2D.limit_left / 100 + mob_hits * 10
 
-func _process(delta):
-	if game_over:
-		if Input.is_action_pressed("up"):
-			game_over = false
-			emit_signal("game_start")
-		return
-	
-	$Terrain.add_hills_if_necessary($Player.position)
-
-	$Player/Camera2D.limit_left = max($Player.position.x - 500, $Player/Camera2D.limit_left)
-	$HUD/Score.text = str(score())
-	
-func _on_Mob_hit():
-	mob_hits += 1
-
 func spawn_mob():
 	var mob = Mob.instance()
-	mob.connect("hit", self, "_on_Mob_hit")
 	
-	add_child(mob)
-
 	mob.position = Vector2($Player.position.x + rand_range(1000, 5000), -rand_range(100, 200))
-	
 	mob.linear_velocity = Vector2(-rand_range(score() + 200, score() * 2), rand_range(0, 200))
 	mob.angular_velocity = rand_range(-2, 2)
 	
-func _on_Player_body_entered(body):
-	if game_over:
-		return
-	else:
-		game_over = true
-		restart_cooldown = true
-		$RestartTimer.start()
-		emit_signal("game_over", score())
+	add_child(mob)
 
-func _on_RestartTimer_timeout():
-	restart_cooldown = false
+func camera_left_margin():
+	return $Player/Camera2D.global_position.x - get_viewport().size.x / 2
+
+#func update_left_margin(extra_drift):
+	#if camera_left < left_margin():
+	#	camera_left = left_margin()
+	#	$Player/Camera2D.limit_left = camera_left + extra_drift
+
+func monotonic_left_margin_update(value, guaranteed_step):
+	camera_left = max(camera_left, value) + guaranteed_step
+	return camera_left
+
+func _process(delta):
+	$Terrain.add_hills_if_necessary($Player.position)
+	
+	if game_started and not game_over:
+		$Player/Camera2D.limit_left = monotonic_left_margin_update(camera_left_margin(), 2 + $Player/Camera2D.limit_left * 0.0005)
+		
+		if $Player.beyond_bounds():
+			game_over_condition()
+
+	if not game_started and Input.is_action_pressed("up"):
+		game_started = true
+		emit_signal("game_started")
+
+func _on_Player_body_entered(body):
+	game_over_condition()
+
+func _on_MobTimer_timeout():
+	spawn_mob()

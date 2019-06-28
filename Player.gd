@@ -6,27 +6,21 @@ var torque = 5000
 export (PackedScene) var bullet
 onready var bullet_container = get_node("BulletContainer")
 
-func reset():
-	$Camera2D.limit_left = 0
-	linear_velocity.x = 0
-	linear_velocity.y = 0
-	angular_velocity = 0
-	rotation = -PI / 2
-	position.x = 0
-	position.y = 0
-
-func _ready():
-	reset()
+func is_game_over():
+	return get_parent().game_over
 
 func _process(delta):
-	if get_parent().is_game_over():
+	if is_game_over():
 		return
 	
 	if Input.is_action_pressed("shoot"):
 		shoot()
 
+
 func _integrate_forces(state):
-	if get_parent().is_game_over():
+	if is_game_over():
+		applied_force = Vector2()
+		applied_torque = 0
 		return
 	
 	if Input.is_action_pressed("up"):
@@ -41,17 +35,15 @@ func _integrate_forces(state):
 
 	applied_torque = rotation_dir * torque
 
+func beyond_bounds():
+	return position.y < -200 or position.x < $Camera2D.limit_left
+
 func shoot():
 	var b = bullet.instance()
 	bullet_container.add_child(b)
-	b.start_at(rotation, $Muzzle.global_position)
+	b.start_at(rotation, $Muzzle.global_position, linear_velocity)
 	#apply_impulse(Vector2(5, 0), Vector2(-5, 0))
 
 func _on_BorderTimer_timeout():
-	if get_parent().is_game_over():
-		return
-
-	$Camera2D.limit_left += 1
-
-func game_start():
-	reset()
+	if not is_game_over():
+		$Camera2D.limit_left += 1
