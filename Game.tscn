@@ -13,7 +13,7 @@ script = ExtResource( 3 )
 
 [node name="Score" type="Label" parent="HUD"]
 margin_bottom = 14.0
-text = "x"
+text = "Score: 0"
 
 [node name="Label" type="Label" parent="HUD"]
 margin_left = 450.639

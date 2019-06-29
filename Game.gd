@@ -31,13 +31,8 @@ func _process(delta):
 		level.queue_free()
 		level = null
 
-func _on_Mob_hit():
-	#mob_hits += 1
-	pass
-
 func _on_RestartTimer_timeout():
 	restart_cooldown = false
-	print("restart now possible")
 
 func _on_Level_game_over(score):
 	game_over()

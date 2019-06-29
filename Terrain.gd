@@ -43,8 +43,8 @@ func _ready():
 	terrain = Array()
 	
 	screensize = get_viewport().get_visible_rect().size
-	#var start_y = screensize.y * 3/4 + (-hill_range + randi() % hill_range * 2)
-	var start_y = screensize.y * 3 / 4
+	var start_y = screensize.y * 3/5 - (randi() % hill_range)
+	#var start_y = screensize.y * 3 / 5
 
 	terrain.append(Vector2(0, start_y))
 	add_hills()

@@ -19,7 +19,6 @@ func game_over_condition():
 	game_over = true
 	$Player/Camera2D.current = false
 	$MobTimer.stop()
-	print("emitting game over")
 	emit_signal("game_over", score())
 
 func score():
@@ -31,6 +30,8 @@ func spawn_mob():
 	mob.position = Vector2($Player.position.x + rand_range(1000, 5000), -rand_range(100, 200))
 	mob.linear_velocity = Vector2(-rand_range(score() + 200, score() * 2), rand_range(0, 200))
 	mob.angular_velocity = rand_range(-2, 2)
+	
+	mob.connect("hit", self, "_on_Mob_hit")
 	
 	add_child(mob)
 
@@ -63,3 +64,6 @@ func _on_Player_body_entered(body):
 
 func _on_MobTimer_timeout():
 	spawn_mob()
+
+func _on_Mob_hit():
+	mob_hits += 1
