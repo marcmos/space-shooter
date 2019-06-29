@@ -58,6 +58,7 @@ func _process(delta):
 	if not game_started and Input.is_action_pressed("up"):
 		game_started = true
 		emit_signal("game_started")
+		$Player.gravity_scale = 0.1
 
 func _on_Player_body_entered(body):
 	game_over_condition()

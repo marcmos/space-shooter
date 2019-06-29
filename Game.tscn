@@ -16,19 +16,24 @@ margin_bottom = 14.0
 text = "Score: 0"
 
 [node name="Label" type="Label" parent="HUD"]
-margin_left = 450.639
+anchor_right = 0.27
 margin_top = 100.701
-margin_right = 587.639
+margin_right = -139.48
 margin_bottom = 114.701
-text = "Press any key to start"
+text = "Press \"w\" key to start"
+align = 1
+valign = 1
 
 [node name="BlinkTimer" type="Timer" parent="HUD/Label"]
 autostart = true
 
 [node name="Highscore" type="Label" parent="HUD"]
+visible = false
 anchor_right = 0.33
-margin_right = -337.92
-align = 2
+margin_top = 16.0
+margin_right = -262.92
+margin_bottom = 30.0
+text = "Highscores:"
 valign = 1
 
 [node name="GameOver" type="Label" parent="HUD"]
@@ -38,6 +43,8 @@ margin_top = 79.3119
 margin_right = 554.537
 margin_bottom = 93.3119
 text = "Game over!"
+align = 1
+valign = 1
 
 [node name="RestartTimer" type="Timer" parent="."]
 wait_time = 2.0

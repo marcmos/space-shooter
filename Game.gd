@@ -20,12 +20,12 @@ func instance_level():
 	new_level.connect("game_started", $HUD, "_on_Level_game_started")
 	return new_level
 
-func _process(delta):
+func _process(_delta):
 	if level == null:
 		level = instance_level()
 		add_child(level)
 
-	$HUD/Score.text = str(level.score())
+	$HUD/Score.text = "Score: " + str(level.score())
 
 	if is_game_over() and (not restart_cooldown) and Input.is_action_pressed("up"):
 		level.queue_free()
