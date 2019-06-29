@@ -3,8 +3,8 @@
 [ext_resource path="res://Mob.gd" type="Script" id=1]
 [ext_resource path="res://space-shooter-redux/PNG/Meteors/meteorBrown_big1.png" type="Texture" id=2]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 43.4303, 32.3498 )
+[sub_resource type="ConvexPolygonShape2D" id=1]
+points = PoolVector2Array( 23, -42, 50, -2, 35, 33, 10, 28, -22, 41, -50, 10, -34, -41 )
 
 [node name="Mob" type="RigidBody2D"]
 contacts_reported = 1
