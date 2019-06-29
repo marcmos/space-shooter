@@ -12,7 +12,6 @@ func is_game_over():
 func game_over():
 	restart_cooldown = true
 	$RestartTimer.start()
-	print("restart cooldown timer started")
 
 func instance_level():
 	var new_level = Level.instance()

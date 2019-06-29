@@ -9,13 +9,15 @@ onready var bullet_container = get_node("BulletContainer")
 func is_game_over():
 	return get_parent().game_over
 
+func _ready():
+	position.x = get_viewport().size.x / 2
+
 func _process(delta):
 	if is_game_over():
 		return
 	
 	if Input.is_action_pressed("shoot"):
 		shoot()
-
 
 func _integrate_forces(state):
 	if is_game_over():

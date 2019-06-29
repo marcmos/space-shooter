@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 
 export (PackedScene) var Mob
 
@@ -8,7 +8,7 @@ signal game_over(score)
 var game_started = false
 var game_over = false
 
-onready var camera_left = camera_left_margin()
+var camera_left
 
 var mob_hits = 0
 
@@ -37,14 +37,13 @@ func spawn_mob():
 func camera_left_margin():
 	return $Player/Camera2D.global_position.x - get_viewport().size.x / 2
 
-#func update_left_margin(extra_drift):
-	#if camera_left < left_margin():
-	#	camera_left = left_margin()
-	#	$Player/Camera2D.limit_left = camera_left + extra_drift
-
 func monotonic_left_margin_update(value, guaranteed_step):
 	camera_left = max(camera_left, value) + guaranteed_step
 	return camera_left
+
+func _ready():
+	camera_left = camera_left_margin()
+	$Player/Camera2D.limit_left = camera_left
 
 func _process(delta):
 	$Terrain.add_hills_if_necessary($Player.position)

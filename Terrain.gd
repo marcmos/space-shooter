@@ -31,8 +31,8 @@ func add_hills():
 	var shape = CollisionPolygon2D.new()
 	var ground = Polygon2D.new()
 	add_child(shape)
-	poly.append(Vector2(terrain[-1].x, screensize.y))
-	poly.append(Vector2(start.x, screensize.y))
+	poly.append(Vector2(terrain[-1].x, screensize.y * 2))
+	poly.append(Vector2(start.x, screensize.y * 2))
 	shape.polygon = poly
 	ground.polygon = poly
 	ground.texture = texture
@@ -44,7 +44,7 @@ func _ready():
 	
 	screensize = get_viewport().get_visible_rect().size
 	#var start_y = screensize.y * 3/4 + (-hill_range + randi() % hill_range * 2)
-	var start_y = 500
-	
+	var start_y = screensize.y * 3 / 4
+
 	terrain.append(Vector2(0, start_y))
 	add_hills()
