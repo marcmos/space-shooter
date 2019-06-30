@@ -1,4 +1,4 @@
-extends KinematicBody2D
+extends RigidBody2D
 
 var vel = Vector2()
 export var speed = 1000
@@ -15,4 +15,7 @@ func _physics_process(delta):
 	position = position + vel * delta
 
 func _on_LifetimeTimer_timeout():
+	queue_free()
+
+func _on_PlayerBullet_body_entered(body):
 	queue_free()

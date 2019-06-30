@@ -27,7 +27,7 @@ func score():
 func spawn_mob():
 	var mob = Mob.instance()
 	
-	mob.position = Vector2($Player.position.x + rand_range(1000, 5000), -rand_range(100, 200))
+	mob.position = Vector2($Player.position.x + get_viewport().size.x, -rand_range(100, 200))
 	mob.linear_velocity = Vector2(-rand_range(score() + 200, score() * 2), rand_range(0, 200))
 	mob.angular_velocity = rand_range(-2, 2)
 	
@@ -59,6 +59,7 @@ func _process(delta):
 		game_started = true
 		emit_signal("game_started")
 		$Player.gravity_scale = 0.1
+		$MobTimer.start()
 
 func _on_Player_body_entered(body):
 	game_over_condition()

@@ -15,7 +15,6 @@ script = ExtResource( 1 )
 Mob = ExtResource( 2 )
 
 [node name="MobTimer" type="Timer" parent="."]
-autostart = true
 
 [node name="Terrain" type="StaticBody2D" parent="."]
 script = ExtResource( 3 )
