@@ -3,6 +3,8 @@ extends RigidBody2D
 var thrust = Vector2(0, 300)
 var torque = 5000
 
+var sprite_rect
+
 export (PackedScene) var bullet
 onready var bullet_container = get_node("BulletContainer")
 
@@ -11,6 +13,8 @@ func is_game_over():
 
 func _ready():
 	position.x = get_viewport().size.x / 2
+	sprite_rect = Vector2($Sprite.get_rect().size.x * $Sprite.scale.x, \
+		$Sprite.get_rect().size.y * $Sprite.scale.y)
 
 func _process(delta):
 	if is_game_over():
@@ -38,13 +42,13 @@ func _integrate_forces(state):
 	applied_torque = rotation_dir * torque
 
 func beyond_bounds():
-	return position.y < -200 or position.x < $Camera2D.limit_left
+	return position.y + (sprite_rect.y / 2) < $Camera2D.limit_top or \
+		position.x + (sprite_rect.x / 2) < $Camera2D.limit_left
 
 func shoot():
 	var b = bullet.instance()
 	bullet_container.add_child(b)
 	b.start_at(rotation, $Muzzle.global_position, linear_velocity)
-	#apply_impulse(Vector2(5, 0), Vector2(-5, 0))
 
 func _on_BorderTimer_timeout():
 	if not is_game_over():

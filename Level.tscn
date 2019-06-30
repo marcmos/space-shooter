@@ -25,7 +25,6 @@ default_color = Color( 0.141176, 0.141176, 0.141176, 1 )
 texture_mode = -1082211219
 
 [node name="Player" type="RigidBody2D" parent="."]
-editor/display_folded = true
 rotation = -1.5708
 gravity_scale = 0.0
 contacts_reported = 1
