@@ -16,7 +16,6 @@ func game_over(score):
 	$Highscore.text = "Highscores:\n";
 	for i in range(0, len(highscore)):
 		$Highscore.text += str(i + 1) + ": " + str(highscore[i]) + "\n"
-		print($Highscore.text)
 	$Highscore.visible = true
 	$GameOver.visible = true
 	$Label.visible = true
