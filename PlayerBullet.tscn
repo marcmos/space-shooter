@@ -4,7 +4,7 @@
 [ext_resource path="res://space-shooter-redux/PNG/Lasers/laserRed05.png" type="Texture" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
-radius = 4.59415
+radius = 5.0359
 height = 28.9097
 
 [node name="PlayerBullet" type="RigidBody2D"]
