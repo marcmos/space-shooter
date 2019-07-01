@@ -4,6 +4,7 @@ export (PackedScene) var Mob
 
 signal game_started
 signal game_over(score)
+signal level_progress
 
 var game_started = false
 var game_over = false
@@ -11,6 +12,7 @@ var game_over = false
 var camera_left
 
 var mob_hits = 0
+var level_progress = 0
 
 func game_over_condition():
 	if game_over:
@@ -18,7 +20,6 @@ func game_over_condition():
 	
 	game_over = true
 	$Player/Camera2D.current = false
-	$MobTimer.stop()
 	emit_signal("game_over", score())
 
 func score():
@@ -38,8 +39,15 @@ func spawn_mob():
 func camera_left_margin():
 	return $Player/Camera2D.global_position.x - get_viewport().size.x / 2
 
+func update_level_progress(pos):
+	var new_level_progress = int(int(pos) / get_viewport_rect().size.x * 2)
+	if new_level_progress > level_progress:
+		emit_signal("level_progress")
+		level_progress = new_level_progress
+
 func monotonic_left_margin_update(value, guaranteed_step):
 	camera_left = max(camera_left, value) + guaranteed_step
+	update_level_progress(camera_left)
 	return camera_left
 
 func _ready():
@@ -59,13 +67,12 @@ func _process(delta):
 		game_started = true
 		emit_signal("game_started")
 		$Player.gravity_scale = 0.1
-		$MobTimer.start()
 
 func _on_Player_body_entered(body):
 	game_over_condition()
 
-func _on_MobTimer_timeout():
-	spawn_mob()
-
 func _on_Mob_hit():
 	mob_hits += 1
+
+func _on_Level_level_progress():
+	spawn_mob()

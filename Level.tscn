@@ -14,8 +14,6 @@ points = PoolVector2Array( 35, -30, 5, 47, -29, -30 )
 script = ExtResource( 1 )
 Mob = ExtResource( 2 )
 
-[node name="MobTimer" type="Timer" parent="."]
-
 [node name="Terrain" type="StaticBody2D" parent="."]
 script = ExtResource( 3 )
 
@@ -53,5 +51,5 @@ __meta__ = {
 
 [node name="BulletContainer" type="Node" parent="Player"]
 
-[connection signal="timeout" from="MobTimer" to="." method="_on_MobTimer_timeout"]
+[connection signal="level_progress" from="." to="." method="_on_Level_level_progress"]
 [connection signal="body_entered" from="Player" to="." method="_on_Player_body_entered"]
