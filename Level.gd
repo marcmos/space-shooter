@@ -76,3 +76,4 @@ func _on_Mob_hit():
 
 func _on_Level_level_progress():
 	spawn_mob()
+	$Terrain.set_hill_range($Terrain.hill_range + 1)

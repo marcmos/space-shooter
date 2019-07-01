@@ -2,11 +2,14 @@ extends StaticBody2D
 
 export var num_hills = 2
 export var slice = 10
-export var hill_range = 100
+export var hill_range = 0
 
 var screensize
 var terrain
 var texture = preload("res://rock.png")
+
+func set_hill_range(r):
+	hill_range = min(r, int(get_viewport_rect().size.y / 3))
 
 func add_hills_if_necessary(position):
 	if terrain[-1].x < position.x + screensize.x:
@@ -43,8 +46,8 @@ func _ready():
 	terrain = Array()
 	
 	screensize = get_viewport().get_visible_rect().size
-	var start_y = screensize.y * 3/5 - (randi() % hill_range)
-	#var start_y = screensize.y * 3 / 5
+	hill_range = int(screensize.y * 1/6)
+	var start_y = screensize.y * 4/5
 
 	terrain.append(Vector2(0, start_y))
 	add_hills()
