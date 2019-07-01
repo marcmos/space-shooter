@@ -23,6 +23,7 @@ texture_mode = -1082211219
 
 [node name="Player" type="RigidBody2D" parent="."]
 rotation = -1.5708
+collision_layer = 4
 gravity_scale = 0.0
 contacts_reported = 1
 contact_monitor = true
