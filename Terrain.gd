@@ -6,7 +6,7 @@ export var hill_range = 0
 
 var screensize
 var terrain
-var texture = preload("res://rock.png")
+var texture = preload("res://res/rock.png")
 
 func set_hill_range(r):
 	hill_range = min(r, int(get_viewport_rect().size.y / 3))

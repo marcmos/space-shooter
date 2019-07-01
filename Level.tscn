@@ -5,7 +5,7 @@
 [ext_resource path="res://Terrain.gd" type="Script" id=3]
 [ext_resource path="res://Player.gd" type="Script" id=4]
 [ext_resource path="res://PlayerBullet.tscn" type="PackedScene" id=5]
-[ext_resource path="res://rocket.png" type="Texture" id=6]
+[ext_resource path="res://res/rocket.png" type="Texture" id=6]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 35, -30, 5, 47, -29, -30 )
